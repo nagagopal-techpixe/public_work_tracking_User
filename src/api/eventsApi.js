@@ -71,3 +71,31 @@ export const getWorkById = async (id) => {
   }
 
 }
+export const getAllNews = async () => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/work_tracking/auth/user/get-all-news`
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error("Error fetching news:", error);
+    throw error; // important for UI handling
+  }
+};
+
+// Get News By ID
+export const getNewsById = async (id) => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/work_tracking/auth/user/get-news-id/${id}`
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error("Error fetching news by id:", error);
+    throw error;
+  }
+};

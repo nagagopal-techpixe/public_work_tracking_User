@@ -104,6 +104,14 @@ const ViewDetail = ({ eventId, navigate }) => {
         <div><b>Fund Source:</b> {work.fundSource}</div>
         <div><b>Verified:</b> {work.verified ? "Yes" : "No"}</div>
 
+  <div>
+          <b>State:</b>{" "}
+          {work.constituencydata?.[0]?.state}
+        </div>
+        <div>
+          <b>parliament:</b>{" "}
+          {work.constituencydata?.[0]?.district}
+        </div>
         <div>
           <b>Constituency:</b>{" "}
           {work.constituencydata?.[0]?.constituency_name}

@@ -51,49 +51,99 @@ const Events = ({ navigate, setSelectedEventId }) => {
 
             {eventsData.events.map((event) => (
 
-              <div
-                key={event._id}
-                className="border rounded-xl shadow hover:shadow-lg flex flex-col"
-              >
+            <div
+  key={event._id}
+  className="group border rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden bg-white flex flex-col"
+>
 
-                <img
-                  src={event.images?.[0] || "https://via.placeholder.com/400"}
-                  alt={event.title}
-                  className="h-48 w-full object-cover"
-                />
+  {/* Image */}
+  <div className="relative overflow-hidden">
+    <img
+      src={event.images?.[0] || "https://via.placeholder.com/400"}
+      alt={event.title}
+      className="h-48 w-full object-cover group-hover:scale-105 transition duration-300"
+    />
 
-
-                <div className="p-5 flex flex-col flex-grow">
-
-                  <h3 className="text-lg font-bold text-orange-600 mb-2">
-                    {event.title}
-                  </h3>
-
-                  <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-                    <Calendar size={15} />
-                    {event.status}
-                  </div>
-
-                  <p className="text-sm text-slate-700 line-clamp-3 flex-grow">
-                    {event.description}
-                  </p>
+    {/* Status Badge */}
+    <span className="absolute top-3 right-3 bg-orange-600 text-white text-xs px-3 py-1 rounded-full shadow">
+      {event.status}
+    </span>
+  </div>
 
 
-                  {/* ✅ View Button */}
-                  <button
-                    onClick={() => {
-  setSelectedEventId(event._id);
-  navigate('viewdetail');
-}}
+  {/* Content */}
+  <div className="p-5 flex flex-col flex-grow">
 
-                    className="mt-4 w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700 transition"
-                  >
-                    View
-                  </button>
+    {/* Title */}
+    <h3 className="text-lg font-semibold text-slate-800 mb-1 line-clamp-1">
+      {event.title}
+    </h3>
 
-                </div>
 
-              </div>
+    {/* Description */}
+    <p className="text-sm text-slate-600 line-clamp-2 mb-3">
+      {event.description}
+    </p>
+
+
+    {/* Location Box */}
+ <div className="bg-slate-50 rounded-xl p-5 mb-5 border border-slate-200">
+
+  <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-slate-700">
+<p className="flex gap-1">
+      <span className="font-semibold">State:</span>
+      <span>{event.constituencydata?.[0]?.state || "N/A"}</span>
+    </p>
+   
+
+    <p className="flex gap-1">
+      <span className="font-semibold">Mandal:</span>
+      <span>{event.mandaldata?.[0]?.mandal_name || "N/A"}</span>
+    </p>
+
+    
+<p className="flex gap-1">
+      <span className="font-semibold">parliament:</span>
+      <span>{event.constituencydata?.[0]?.district || "N/A"}</span>
+    </p>
+    <p className="flex gap-1">
+      <span className="font-semibold">Village:</span>
+      <span>{event.villagedata?.[0]?.village_name || "N/A"}</span>
+    </p>
+
+    
+
+     <p className="flex gap-1">
+      <span className="font-semibold">Constituency:</span>
+      <span>{event.constituencydata?.[0]?.constituency_name || "N/A"}</span>
+    </p>
+
+    <p className="flex gap-1">
+      <span className="font-semibold">Habitation:</span>
+      <span>{event.habitationdata?.[0]?.habitation_name || "N/A"}</span>
+    </p>
+
+  </div>
+
+</div>
+
+
+
+    {/* Button */}
+    <button
+      onClick={() => {
+        setSelectedEventId(event._id);
+        navigate("viewdetail");
+      }}
+      className="mt-auto w-full bg-orange-600 text-white py-2.5 rounded-lg font-medium hover:bg-orange-700 active:scale-95 transition"
+    >
+      View Details
+    </button>
+
+  </div>
+
+</div>
+
             ))}
 
           </div>

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Events from "../src/pages/Events.jsx";
-import ViewDetail from "../src/pages/UserWorkDetails.jsx";
+import ViewDetail from "./pages/UserWorkDetails.jsx";
+import News from "./pages/News.jsx";
+import NewsDetails from "./pages/NewsDetails.jsx";
 
+import axios from 'axios';
 import { 
   Menu, X, ChevronRight, Calendar, Users, FileText, 
   Award, Phone, MapPin, Mail, PlayCircle, Heart, 
@@ -29,7 +32,7 @@ const NAV_LINKS = [
   { id: 'home', label: 'Home' },
   { id: 'about', label: 'About Us' },
   { id: 'achievements', label: 'Achievements' },
-  { id: 'events', label: 'Events' },
+  { id: 'events', label: 'Works' },
   // { id: 'viewdetail', label: 'View Detail' },  
   { id: 'news', label: 'News' },
   { id: 'organization', label: 'Organization' },
@@ -39,11 +42,7 @@ const NAV_LINKS = [
 
 ];
 
-const LATEST_HIGHLIGHTS = [
-  { id: 1, title: "Rural Water Project Complete", date: "Oct 12, 2023", img: "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80&w=400", desc: "Successfully inaugurated the new water pipeline serving 50 villages." },
-  { id: 2, title: "Youth Skills Workshop", date: "Oct 10, 2023", img: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=400", desc: "Over 500 students participated in our digital literacy drive." },
-  { id: 3, title: "Green City Initiative", date: "Oct 05, 2023", img: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=400", desc: "Planting 10,000 trees across the metro district." },
-];
+
 
 const LEADERSHIP = [
   { id: 1, name: "Dr. Aravind Sharma", role: "Founder & President", img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400" },
@@ -79,7 +78,8 @@ const Button = ({ children, variant = "primary", onClick, type = "button", disab
 
 // --- PAGES ---
 
-const Home = ({ navigate }) => (
+const Home = ({ navigate, latestWorks = [], loadingWorks = false }) => (
+
   <div className="animate-in fade-in duration-500">
     {/* Hero Section */}
     <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
@@ -105,24 +105,33 @@ const Home = ({ navigate }) => (
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-end mb-8">
           <h2 className="text-3xl font-bold text-slate-800">Latest Highlights</h2>
-          <button onClick={() => navigate('news')} className="text-orange-600 font-semibold hover:underline flex items-center gap-1">
+          <button onClick={() => navigate('events')} className="text-orange-600 font-semibold hover:underline flex items-center gap-1">
             View All <ArrowRight size={16} />
           </button>
         </div>
         {/* Horizontal Scroll Snap for Mobile */}
         <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 scrollbar-hide">
-          {LATEST_HIGHLIGHTS.map((item) => (
-            <div key={item.id} className="snap-center shrink-0 w-80 md:w-96 bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 overflow-hidden">
-                <img src={item.img} alt={item.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-              <div className="p-6">
-                <span className="text-xs font-bold text-orange-600 uppercase tracking-wider">{item.date}</span>
-                <h3 className="text-xl font-bold mt-2 mb-2 text-slate-800">{item.title}</h3>
-                <p className="text-slate-600 text-sm line-clamp-2">{item.desc}</p>
-              </div>
-            </div>
-          ))}
+         <div className="flex overflow-x-auto snap-x snap-mandatory gap-10 pb-6 scrollbar-hide">
+  {loadingWorks ? (
+    <p className="text-center text-slate-500 py-10">Loading latest works...</p>
+  ) : (
+    latestWorks.map((item) => (
+      <div key={item._id} className="snap-center shrink-0 w-80 md:w-96 bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden hover:shadow-lg transition-shadow">
+        <div className="h-64 overflow-hidden">
+          <img src={item.images[0]} alt={item.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+        </div>
+        <div className="p-6">
+          <span className="text-xs font-bold text-orange-600 uppercase tracking-wider">{new Date(item.createdAt).toLocaleDateString()}</span>
+          <h3 className="text-xl font-bold mt-2 mb-2 text-slate-800">{item.title}</h3>
+          <p className="text-slate-600 text-sm line-clamp-2">{item.description}</p>
+        </div>
+      </div>
+    ))
+  )}
+</div>
+
+
+
         </div>
       </div>
     </section>
@@ -491,27 +500,7 @@ const JoinUs = () => {
 };
 
 // Simple placeholders for other pages to keep file length manageable
-const News = () => (
-  <div className="py-12 bg-white container mx-auto px-4">
-    <SectionTitle title="Latest News & Press" subtitle />
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {[1, 2, 3, 4, 5, 6].map((n) => (
-        <div key={n} className="border border-slate-100 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-          <img src={`https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=400&text=${n}`} className="w-full h-48 object-cover" alt="news" />
-          <div className="p-6">
-            <div className="flex justify-between text-sm text-slate-500 mb-3">
-              <span>Politics</span>
-              <span>Oct {n + 10}, 2023</span>
-            </div>
-            <h3 className="text-xl font-bold mb-3 hover:text-orange-600 cursor-pointer">New Reforms Announced for Rural Sector</h3>
-            <p className="text-slate-600 text-sm mb-4">The party leadership today announced a comprehensive package aimed at revitalizing...</p>
-            <a href="#" className="text-orange-600 font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">Read More <ArrowRight size={14}/></a>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
+
 
 const Organization = () => (
   <div className="py-12 bg-white container mx-auto px-4">
@@ -579,6 +568,27 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
+  const [selectedNewsId, setSelectedNewsId] = useState(null);
+  const [latestWorks, setLatestWorks] = useState([]);
+const [loadingWorks, setLoadingWorks] = useState(true);
+useEffect(() => {
+  const fetchWorks = async () => {
+    try {
+      setLoadingWorks(true);
+      const res = await axios.get('http://localhost:3007/work_tracking/auth/user/GetAllWorks?page=1&limit=1');
+      setLatestWorks(res.data.data || []); 
+    } catch (err) {
+      console.error(err);
+      setLatestWorks([]);
+    } finally {
+      setLoadingWorks(false);
+    }
+  };
+  fetchWorks();
+}, []);
+
+
+
 
   // Scroll to top on page change
   useEffect(() => {
@@ -588,11 +598,24 @@ const App = () => {
 
   const renderPage = () => {
     switch(currentPage) {
-      case 'home': return <Home navigate={setCurrentPage} />;
+      case 'home': 
+  return <Home 
+           navigate={setCurrentPage} 
+           latestWorks={latestWorks} 
+           loadingWorks={loadingWorks} 
+         />;
+
       case 'about': return <About />;
       case 'achievements': return <Achievements />;
       case 'join': return <JoinUs />;
-      case 'news': return <News />;
+      case 'news':
+  return (
+    <News
+      navigate={setCurrentPage}
+      setSelectedNewsId={setSelectedNewsId}
+    />
+  );
+
       case 'organization': return <Organization />;
       case 'contact': return <Contact />;
      case 'events':
@@ -610,7 +633,13 @@ case 'viewdetail':
       navigate={setCurrentPage}
     />
   );
-
+  case 'newsdetail':
+  return (
+    <NewsDetails
+      newsId={selectedNewsId}
+      navigate={setCurrentPage}
+    />
+  );
 
       default: return <div className="p-20 text-center">Page Under Construction</div>;
     }
