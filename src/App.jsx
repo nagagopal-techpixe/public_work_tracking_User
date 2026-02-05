@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Events from "../src/pages/Events.jsx";
+import ViewDetail from "../src/pages/UserWorkDetails.jsx";
 
 import { 
   Menu, X, ChevronRight, Calendar, Users, FileText, 
@@ -29,11 +30,13 @@ const NAV_LINKS = [
   { id: 'about', label: 'About Us' },
   { id: 'achievements', label: 'Achievements' },
   { id: 'events', label: 'Events' },
+  // { id: 'viewdetail', label: 'View Detail' },  
   { id: 'news', label: 'News' },
   { id: 'organization', label: 'Organization' },
   { id: 'media', label: 'Media' },
   { id: 'join', label: 'Join Us', isCta: true },
   { id: 'contact', label: 'Contact' },
+
 ];
 
 const LATEST_HIGHLIGHTS = [
@@ -568,11 +571,14 @@ const Contact = () => (
   </div>
 );
 
+
+
 // --- MAIN APP SHELL ---
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedEventId, setSelectedEventId] = useState(null);
 
   // Scroll to top on page change
   useEffect(() => {
@@ -589,7 +595,23 @@ const App = () => {
       case 'news': return <News />;
       case 'organization': return <Organization />;
       case 'contact': return <Contact />;
-      case 'events': return <Events />;
+     case 'events':
+  return (
+    <Events
+      navigate={setCurrentPage}
+      setSelectedEventId={setSelectedEventId}
+    />
+  );
+
+case 'viewdetail':
+  return (
+    <ViewDetail
+      eventId={selectedEventId}
+      navigate={setCurrentPage}
+    />
+  );
+
+
       default: return <div className="p-20 text-center">Page Under Construction</div>;
     }
   };
@@ -684,6 +706,7 @@ const App = () => {
           </div>
         )}
       </header>
+      
 
       {/* MAIN CONTENT AREA */}
       <main className="min-h-screen">
