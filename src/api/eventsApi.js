@@ -1,20 +1,19 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:3007";
+export const API_BASE_URL = "http://localhost:3007";
 
-export const getAllEvents = async (params) => {
-  try {
-    const response = await axios.get(
-      `${API_BASE_URL}/work_tracking/auth/user/GetAllWorks`,
-      { params } // axios will auto build query string
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching events:", error);
-    throw error;
-  }
+export const getAllEvents = async (params = {}) => {
+  return axios.get(
+    `${API_BASE_URL}/work_tracking/auth/user/GetAllWorks`,
+    {
+      params: {
+        verified: true,
+        ...params,
+      },
+    }
+  );
 };
+
 export const getAllConstituencies = async () => {
   try{
     const response = await axios.get(`${API_BASE_URL}/work_tracking/auth/user/GetAllConstituencies`)
@@ -26,7 +25,6 @@ export const getAllConstituencies = async () => {
 
   }
 }
-
 export const GetAllMandalsByConstituencyId = async (constituencyId) => {
   try{
     const response = await axios.get(`${API_BASE_URL}/work_tracking/auth/user/GetAllMandals/${constituencyId}`)
@@ -37,7 +35,6 @@ export const GetAllMandalsByConstituencyId = async (constituencyId) => {
     console.error("Error fetching mandals:", error);
   }
 }
-
 export const GetAllVillagesByMandalId = async (mandalId) => {
   try{
     const response = await axios.get(`${API_BASE_URL}/work_tracking/auth/user/GetAllVillages/${mandalId}`);
@@ -112,6 +109,24 @@ export const submitContactForm = async (formData) => {
 
   } catch (error) {
     console.error("Error submitting contact form:", error);
+    throw error;
+  }
+};
+
+
+// Submit Newsletter Email
+export const submitNewsletter = async (emailData) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/work_tracking/auth/user/add-newsletter`,
+      emailData
+    );
+
+    console.log("Newsletter subscribed successfully:", response.data);
+    return response.data;
+
+  } catch (error) {
+    console.error("Error subscribing to newsletter:", error);
     throw error;
   }
 };

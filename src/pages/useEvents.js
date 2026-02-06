@@ -147,36 +147,36 @@ export default function useEvents() {
 
   /* ================= FETCH EVENTS ================= */
 
-  const fetchEvents = async () => {
+const fetchEvents = async () => {
+  setLoading(true);
 
-    setLoading(true);
+  try {
+    const res = await getAllEvents({
+      page,
+      limit,
+      title,
+      status,
 
-    try {
+      constituency_id: constituencyId,
+      mandal_id: mandalId,
+      village_id: villageId,
+      habitation_id: habitationId,
+    });
 
-      const res = await getAllEvents({
-        page,
-        limit,
-        title,
-        status,
-
-        constituency_id: constituencyId,
-        mandal_id: mandalId,
-        village_id: villageId,
-        habitation_id: habitationId,
-      });
-
-      if (res?.success) {
-        setEvents(res.data || []);
-        setTotalPages(res.totalPages || 1);
-      }
-
-    } catch (err) {
-      console.error(err);
-
-    } finally {
-      setLoading(false);
+    // ✅ Correct response handling
+    if (res?.data?.success) {
+      setEvents(res.data.data || []);
+      setTotalPages(res.data.totalPages || 1);
     }
-  };
+
+  } catch (err) {
+    console.error(err);
+
+  } finally {
+    setLoading(false);
+  }
+};
+
 
 
 
