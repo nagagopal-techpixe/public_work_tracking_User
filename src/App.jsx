@@ -3,7 +3,7 @@ import Events from "../src/pages/Events.jsx";
 import ViewDetail from "./pages/UserWorkDetails.jsx";
 import News from "./pages/News.jsx";
 import NewsDetails from "./pages/NewsDetails.jsx";
-
+import {Contact} from "./pages/contact.jsx";
 import axios from 'axios';
 import { 
   Menu, X, ChevronRight, Calendar, Users, FileText, 
@@ -59,7 +59,7 @@ const SectionTitle = ({ title, subtitle, align = "center" }) => (
   </div>
 );
 
-const Button = ({ children, variant = "primary", onClick, type = "button", disabled = false, className = "" }) => {
+export const Button = ({ children, variant = "primary", onClick, type = "button", disabled = false, className = "" }) => {
   const baseStyle = "px-6 py-3 rounded-md font-semibold transition-all duration-200 flex items-center justify-center gap-2";
   const variants = {
     // Primary button is now Orange (via THEME.primary)
@@ -518,47 +518,7 @@ const Organization = () => (
   </div>
 );
 
-const Contact = () => (
-  <div className="py-12 bg-white container mx-auto px-4">
-    <div className="grid md:grid-cols-2 gap-12">
-      <div>
-        <h2 className="text-3xl font-bold mb-6 text-slate-800">Get in Touch</h2>
-        <p className="text-slate-600 mb-8">Have questions or want to volunteer? Reach out to our central office.</p>
-        <div className="space-y-6">
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 shrink-0"><MapPin size={20}/></div>
-            <div>
-              <h4 className="font-bold">Central Office</h4>
-              <p className="text-slate-600">123, Democracy Avenue,<br/>Civil Lines, New Delhi - 110001</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 shrink-0"><Phone size={20}/></div>
-            <div>
-              <h4 className="font-bold">Phone</h4>
-              <p className="text-slate-600">+91 11 2345 6789</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-4">
-             <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 shrink-0"><Mail size={20}/></div>
-             <div>
-               <h4 className="font-bold">Email</h4>
-               <p className="text-slate-600">contact@civicprogress.org</p>
-             </div>
-           </div>
-        </div>
-      </div>
-      <form className="bg-orange-50 p-8 rounded-xl">
-        <div className="space-y-4">
-          <input type="text" placeholder="Your Name" className="w-full p-3 border rounded-md focus:ring-2 focus:ring-orange-500 outline-none" />
-          <input type="email" placeholder="Your Email" className="w-full p-3 border rounded-md focus:ring-2 focus:ring-orange-500 outline-none" />
-          <textarea rows={4} placeholder="Your Message" className="w-full p-3 border rounded-md focus:ring-2 focus:ring-orange-500 outline-none"></textarea>
-          <Button variant="primary" className="w-full">Send Message</Button>
-        </div>
-      </form>
-    </div>
-  </div>
-);
+
 
 
 
@@ -575,7 +535,7 @@ useEffect(() => {
   const fetchWorks = async () => {
     try {
       setLoadingWorks(true);
-      const res = await axios.get('http://localhost:3007/work_tracking/auth/user/GetAllWorks?page=1&limit=1');
+      const res = await axios.get('http://localhost:3007/work_tracking/auth/user/GetAllWorks?page=1&limit=3');
       setLatestWorks(res.data.data || []); 
     } catch (err) {
       console.error(err);

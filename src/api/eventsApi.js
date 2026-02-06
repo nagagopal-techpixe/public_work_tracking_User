@@ -99,3 +99,19 @@ export const getNewsById = async (id) => {
     throw error;
   }
 };
+
+// Submit Contact Form
+export const submitContactForm = async (formData) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/work_tracking/auth/user/submit-contact-form`,
+      formData
+    );
+    console.log("Contact form submitted successfully:", response.data);
+    return response.data;
+
+  } catch (error) {
+    console.error("Error submitting contact form:", error);
+    throw error;
+  }
+};
