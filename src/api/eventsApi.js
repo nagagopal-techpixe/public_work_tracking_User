@@ -130,3 +130,38 @@ export const submitNewsletter = async (emailData) => {
     throw error;
   }
 };
+
+// Submit Donate Amount
+export const submitDonateAmount = async (donateData) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/work_tracking/auth/user/donate-amount`,
+      donateData
+    );
+
+    console.log("Donation submitted successfully:", response.data);
+    return response.data;
+
+  } catch (error) {
+    console.error("Error submitting donation:", error);
+    throw error;
+  }
+};
+// Register Associate Member (Multipart)
+export const registerAssociateMember = async (formData) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/work_tracking/auth/user/register-as-associate-member`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

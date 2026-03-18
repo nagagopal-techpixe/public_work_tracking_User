@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import SectionTitle from "../components/SectionTitle.jsx";
 import { PARTY_NAME } from "../App.jsx"; // Importing party name for use in the form
+import { submitDonateAmount } from "../api/eventsApi.js"
+
 import {
   CheckCircle,
   FileText,
@@ -12,18 +14,50 @@ export const JoinUs = () => {
   const [joinAs, setJoinAs] = useState('member'); // member, volunteer, donor
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+const [fullName, setFullName] = useState("");
+const [mobile, setMobile] = useState("");
+const [email, setEmail] = useState("");
+const [donationAmount, setDonationAmount] = useState("");
 
   // Mock Form Handler
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
-      setSubmitting(false);
-      setSubmitted(true);
-      window.scrollTo(0,0);
-    }, 1500);
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (joinAs !== "donor") {
+    alert("Donation API is only for donors");
+    return;
+  }
+
+  setSubmitting(true);
+
+  try {
+    const payload = {
+      fullname: fullName,
+      mobilenumber: Number(mobile),
+      email: email,
+      donationamount: Number(donationAmount),
+    };
+
+    await submitDonateAmount(payload);
+
+    setSubmitted(true);
+    window.scrollTo(0, 0);
+
+  } catch (error) {
+  console.error(error);
+
+  // Get backend message if exists
+  const errorMessage =
+    error?.response?.data?.message ||
+    "Something went wrong. Please try again.";
+
+  alert(errorMessage);
+}
+finally {
+    setSubmitting(false);
+  }
+};
+
 
   if (submitted) {
     return (
@@ -112,15 +146,37 @@ export const JoinUs = () => {
             <section className="grid md:grid-cols-2 gap-6 pt-6 border-t border-slate-100">
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-1">Full Name *</label>
-                <input required type="text" className="w-full border border-slate-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" placeholder="John Doe" />
+               <input
+  required
+  type="text"
+  value={fullName}
+  onChange={(e) => setFullName(e.target.value)}
+  className="w-full border border-slate-300 rounded-md px-4 py-2"
+  placeholder="John Doe"
+/>
               </div>
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-1">Mobile Number *</label>
-                <input required type="tel" className="w-full border border-slate-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" placeholder="+91 98765 43210" />
+                <input
+  required
+  type="tel"
+  value={mobile}
+  onChange={(e) => setMobile(e.target.value)}
+  className="w-full border border-slate-300 rounded-md px-4 py-2"
+  placeholder="+91 98765 43210"
+/>
+
               </div>
               <div className="md:col-span-2">
                 <label className="block text-sm font-bold text-slate-700 mb-1">Email Address</label>
-                <input type="email" className="w-full border border-slate-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" placeholder="john@example.com" />
+               <input
+  type="email"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  className="w-full border border-slate-300 rounded-md px-4 py-2"
+  placeholder="john@example.com"
+/>
+
               </div>
             </section>
 
@@ -158,10 +214,25 @@ export const JoinUs = () => {
                    <label className="block text-sm font-bold text-slate-700 mb-1">Donation Amount (₹) *</label>
                    <div className="flex gap-4 mb-3">
                      {[500, 1000, 5000].map(amt => (
-                       <button key={amt} type="button" className="px-4 py-1 bg-white border border-slate-300 rounded hover:border-orange-500 text-sm font-medium">₹{amt}</button>
+<button
+  key={amt}
+  type="button"
+  onClick={() => setDonationAmount(amt)}
+  className="px-4 py-1 bg-white border border-slate-300 rounded hover:border-orange-500 text-sm font-medium"
+>
+₹{amt}</button>
                      ))}
                    </div>
-                   <input required type="number" min="100" className="w-full border border-slate-300 rounded-md px-4 py-2" placeholder="Enter custom amount" />
+                 <input
+  required
+  type="number"
+  min="100"
+  value={donationAmount}
+  onChange={(e) => setDonationAmount(e.target.value)}
+  className="w-full border border-slate-300 rounded-md px-4 py-2"
+  placeholder="Enter custom amount"
+/>
+
                 </div>
               ) : (
                 <div className="flex items-center justify-between">
